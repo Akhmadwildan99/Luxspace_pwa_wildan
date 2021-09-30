@@ -6,9 +6,16 @@ import Arived from './Components/Arived';
 import Clients from './Components/Clients';
 import AsideMenu from './Components/AsideMenu';
 import Footer from './Components/Footer';
+import OFfline from './Components/Offline';
 
 function App() {
   const [items, setItems] = React.useState([]);
+  const [offlineStatus, setOfflineStatus] = React.useState(!navigator.onLine);
+
+  function handleOfflinestatus() {
+    setOfflineStatus(!navigator.onLine)
+  }
+
   React.useEffect(function() {
     (async function() {
       const response = await fetch('https://prod-qore-app.qorebase.io/8ySrll0jkMkSJVk/allItems/rows?limit=7&offset=0&$order=asc',{
@@ -19,12 +26,26 @@ function App() {
         }
       });
       const {nodes} = await response.json();
-      setItems(nodes)
-      console.log(nodes)
+      setItems(nodes);
+
+      const script = document.createElement("script");
+      script.src = "/carousel.js";
+      script.async = false;
+      document.body.appendChild(script);
     })();
+
+    handleOfflinestatus();
+    window.addEventListener('online', handleOfflinestatus);
+    window.addEventListener('offline', handleOfflinestatus);
+
+    return function() {
+      window.removeEventListener('online', handleOfflinestatus);
+      window.removeEventListener('offline', handleOfflinestatus);
+    }
   }, [])
   return (
     <>
+      {offlineStatus && <OFfline />}
       <Header />
       <Hero />
       <Browse />
