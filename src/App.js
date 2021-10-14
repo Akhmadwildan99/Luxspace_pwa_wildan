@@ -7,7 +7,9 @@ import Clients from './Components/Clients';
 import AsideMenu from './Components/AsideMenu';
 import Footer from './Components/Footer';
 import OFfline from './Components/Offline';
-import Splash from './pages/splash'
+import Splash from './pages/splash';
+import {BrowserRouter as Router, Route} from 'react-router-dom';
+import Profile from './pages/profile';
 
 function App() {
   const [items, setItems] = React.useState([]);
@@ -67,4 +69,11 @@ function App() {
   );
 }
 
-export default App;
+export default function Routes() {
+  return(
+    <Router>
+      <Route path="/" exact component={App} />
+      <Route path="/profile" exact component={Profile} />
+    </Router>
+  )
+};
